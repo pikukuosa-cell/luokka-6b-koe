@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Koe 6B</title>
+<meta name="description" content="Luokan 6B ympäristöopin kokeet">
+<meta name="theme-color" content="#2b6cb0">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Koe 6B">
+<link rel="manifest" href="manifest.webmanifest?v=1">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+  html,body{margin:0;height:100%;background:#2b6cb0;overflow:hidden}
+  /* Yläreunan turva-alue (lovi / kello) täytetään sovelluksen sinisellä. */
+  #app{position:fixed;left:0;right:0;bottom:0;top:env(safe-area-inset-top,0px);border:0;width:100%;height:calc(100% - env(safe-area-inset-top,0px));background:#f4f6f8}
+  #msg{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;color:#fff;font:16px system-ui,sans-serif;text-align:center;padding:24px;background:#2b6cb0}
+  #msg[hidden]{display:none}
+  #msg a{color:#fff}
+  .spin{width:28px;height:28px;border:3px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:s .8s linear infinite}
+  @keyframes s{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div id="msg"><div class="spin"></div><div>Avataan koetta…</div></div>
+<iframe id="app" title="Koe 6B" allow="clipboard-write"></iframe>
+<script>
+(function(){
+  // Varsinainen sovellus on Google Apps Script -verkkosovellus. Tämä sivu on vain kuori, jonka sisällä
+  // sovellus näkyy ilman Googlen sinistä ilmoituspalkkia. Sivu ei sisällä dataa; kaikki tiedot ovat opettajan Drivessä.
+  var APP_URL = "https://script.google.com/macros/s/AKfycbwEuSOaHagXGH9VXqeu635L6ed32YNrTp7ioTtAfG9NHln-XRPNYyolpho-KaBffGh9Xg/exec";
+  var f = document.getElementById("app"), msg = document.getElementById("msg");
+  function show(){ msg.hidden = true; }
+  f.addEventListener("load", show);
+  f.src = APP_URL;
+  setTimeout(function(){
+    if(!msg.hidden){
+      msg.innerHTML = navigator.onLine
+        ? 'Lataus kestää tavallista kauemmin. <a href="' + APP_URL + '">Avaa koe suoraan</a>'
+        : 'Ei verkkoyhteyttä. Yhdistä verkkoon ja avaa sivu uudelleen.';
+    }
+  }, 15000);
+  if ("serviceWorker" in navigator) { navigator.serviceWorker.register("sw.js").catch(function(){}); }
+})();
+</script>
+</body>
+</html>
